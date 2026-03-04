@@ -8,7 +8,10 @@ const userSchema = new mongoose.Schema({
     // The user's age is a number
     age: { type: Number },
     // The user's email is a string
-    email: { type: String },
+    email: { type: String, required: true, unique: true },
+    // The user's password is a string
+    password: { type: String },
+    
     // The user's role (e.g., admin, student) is a string
     role: { type: String },
     // The user's grade is a string

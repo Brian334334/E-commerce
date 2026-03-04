@@ -5,6 +5,10 @@ import connectDB from './config/db.js';
 // Import the routes for managing users
 import userRoutes from './routes/userRoutes.js';
 
+import authRoutes from './routes/authRoutes.js';
+import productRoutes from './routes/productRoutes.js';
+import cors from 'cors'
+
 // Call the function to connect to our MongoDB database
 connectDB();
 
@@ -16,6 +20,9 @@ app.use(express.json());
 
 // Routes: Tell express to use the userRoutes for any request that starts with '/users'
 app.use('/users', userRoutes);
+app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
+app.use('/uploads', express.static('uploads')); //
 
 // ─── Start Server ─────────────────────────────────────────
 // Define the port number our server will listen on
