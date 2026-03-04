@@ -24,7 +24,7 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, description, price, category, stock } = req.body;
+        const { name, description, price, category, stock, } = req.body;
         if (!name || !price || !category) return res.status(400).json({ message: 'Missing required fields' });
 
         const image = req.file ? req.file.filename : "";

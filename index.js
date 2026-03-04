@@ -1,34 +1,36 @@
-// Import the express framework to create our web server
+
 import express from 'express';
-// Import our database connection function from the config folder
+import cors from 'cors';
+import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-// Import the routes for managing users
 import userRoutes from './routes/userRoutes.js';
 
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/productRoutes.js';
-import cors from 'cors'
 
-// Call the function to connect to our MongoDB database
+// Load environment variables
+dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
-// Create an instance of the express application
 const app = express();
 
-// Middleware: Tell express to parse incoming request bodies as JSON
-app.use(express.json());
+// Enable CORS BEFORE routes
+app.use(cors());
 
-// Routes: Tell express to use the userRoutes for any request that starts with '/users'
+// Parse JSON
+app.use(express.json());
 app.use('/users', userRoutes);
 app.use('/auth', authRoutes);
-app.use('/products', productRoutes);
-app.use('/uploads', express.static('uploads')); //
+// Serve images from uploads
+app.use('/uploads', express.static('uploads'));
 
-// ─── Start Server ─────────────────────────────────────────
-// Define the port number our server will listen on
-const PORT = 3000;
-// Start the server and listen for incoming requests on the specified port
+// Use API routes (required by assignment)
+app.use('/products', productRoutes);
+
+// Server start
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    // Log a message to the console to confirm the server is running
     console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
