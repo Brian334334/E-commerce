@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketOS | Admin Inventory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .table-container { height: calc(100vh - 280px); overflow-y: auto; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800">
+
+    <nav class="sticky top-0 z-50 bg-slate-900 text-white shadow-xl">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-orange-500 p-1.5 rounded-lg">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-none">MarketOS <span class="text-orange-400">Admin</span></h1>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Inventory Control Center</p>
+                </div>
+            </div>
+            <a href="index.html" class="flex items-center gap-2 text-sm font-medium bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg transition">
+                <span>View Storefront</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
+        
+        <div class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 sticky top-24">
+                <div class="flex items-center gap-2 mb-6">
+                    <h2 id="formTitle" class="text-xl font-bold text-slate-800">Add New Product</h2>
+                </div>
+                
+                <form id="productForm" class="space-y-4">
+                    <input type="hidden" id="productId">
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Name</label>
+                        <input type="text" id="name" required class="w-full border-slate-200 border p-2.5 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition text-sm">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Category</label>
+                        <select id="category" required class="w-full border-slate-200 border p-2.5 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition text-sm bg-white">
+                            <option value="Beverages">Beverages</option>
+                            <option value="Dairy">Dairy</option>
+                            <option value="Snacks">Snacks</option>
+                            <option value="Produce">Produce</option>
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Price</label>
+                            <input type="number" id="price" required class="w-full border-slate-200 border p-2.5 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Stock</label>
+                            <input type="number" id="stock" required class="w-full border-slate-200 border p-2.5 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none text-sm">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-1 uppercase">Image</label>
+                        <input type="file" id="image" class="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100 cursor-pointer" />
+                    </div>
+                    
+                    <div class="pt-4 flex flex-col gap-2">
+                        <button type="submit" id="submitBtn" class="w-full bg-orange-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-orange-700 transition duration-200 text-sm">
+                            SAVE PRODUCT
+                        </button>
+                        <button type="button" onclick="resetForm()" class="w-full text-slate-400 text-xs font-medium hover:text-slate-600 transition">
+                            Clear Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-3 space-y-4">
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Live Inventory</p>
+                    <p id="productCount" class="text-2xl font-black text-slate-800">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Out of Stock</p>
+                    <p id="outOfStockCount" class="text-2xl font-black text-red-500">0</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">System Status</p>
+                    <p class="text-sm font-bold text-green-500 flex items-center gap-1 mt-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Online
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                    <h3 class="font-bold text-slate-700">Product List</h3>
+                    <div id="tableLoader" class="hidden animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500"></div>
+                </div>
+                <div class="table-container">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase sticky top-0 z-10">
+                            <tr>
+                                <th class="px-6 py-3 border-b border-slate-100">Product</th>
+                                <th class="px-6 py-3 border-b border-slate-100">Category</th>
+                                <th class="px-6 py-3 border-b border-slate-100">Price</th>
+                                <th class="px-6 py-3 border-b border-slate-100">Stock</th>
+                                <th class="px-6 py-3 border-b border-slate-100 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody" class="divide-y divide-slate-50">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-8 right-8 hidden bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl z-[100] flex items-center gap-3 transition-all">
+        <span id="toastIcon">✅</span>
+        <span id="toastMsg" class="text-sm font-medium"></span>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/products';
+        const IMAGE_BASE_URL = 'http://localhost:3000/uploads/';
+        
+        const productForm = document.getElementById('productForm');
+        const tableBody = document.getElementById('inventoryTableBody');
+
+        async function loadProducts() {
+            document.getElementById('tableLoader').classList.remove('hidden');
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+
+                document.getElementById('productCount').innerText = data.length;
+                document.getElementById('outOfStockCount').innerText = data.filter(p => p.stock <= 0).length;
+                
+                tableBody.innerHTML = '';
+                data.forEach(p => {
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-slate-50/80 transition duration-150 group";
+                    row.innerHTML = `
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <img src="${IMAGE_BASE_URL + p.image}" class="w-10 h-10 rounded-lg object-cover bg-slate-100 border border-slate-200" onerror="this.src='https://via.placeholder.com/40'">
+                                <span class="font-bold text-slate-700 text-sm">${p.name}</span>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-md bg-slate-100 text-slate-500 uppercase">${p.category}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm font-semibold">${Number(p.price).toLocaleString()} RWF</td>
+                        <td class="px-6 py-4 text-sm">
+                            <span class="${p.stock <= 5 ? 'text-red-500 font-bold' : 'text-slate-600'}">${p.stock} units</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex justify-center gap-2">
+                                <button onclick="editProduct('${p._id}')" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                </button>
+                                <button onclick="deleteProduct('${p._id}')" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (err) {
+                showToast("Connection failed", "⚠️");
+            } finally {
+                document.getElementById('tableLoader').classList.add('hidden');
+            }
+        }
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const originalText = btn.innerText;
+            btn.innerText = "PROCESSING...";
+            btn.disabled = true;
+
+            const id = document.getElementById('productId').value;
+            const formData = new FormData();
+            formData.append('name', document.getElementById('name').value);
+            formData.append('category', document.getElementById('category').value);
+            formData.append('price', document.getElementById('price').value);
+            formData.append('stock', document.getElementById('stock').value);
+            
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) formData.append('image', imageFile);
+
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `${API_URL}/${id}` : API_URL;
+
+            try {
+                const response = await fetch(url, { method, body: formData });
+                if (response.ok) {
+                    resetForm();
+                    await loadProducts();
+                    showToast(id ? "Inventory Updated" : "Product Created");
+                }
+            } catch (err) {
+                showToast("Error saving product", "❌");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        async function deleteProduct(id) {
+            if (confirm("Are you sure? This action cannot be undone.")) {
+                try {
+                    await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+                    loadProducts();
+                    showToast("Item Removed", "🗑️");
+                } catch (err) {
+                    showToast("Delete failed", "❌");
+                }
+            }
+        }
+
+        async function editProduct(id) {
+            const res = await fetch(`${API_URL}/${id}`);
+            const p = await res.json();
+
+            document.getElementById('productId').value = p._id;
+            document.getElementById('name').value = p.name;
+            document.getElementById('category').value = p.category;
+            document.getElementById('price').value = p.price;
+            document.getElementById('stock').value = p.stock;
+
+            document.getElementById('formTitle').innerText = "Update Item";
+            document.getElementById('submitBtn').innerText = "CONFIRM CHANGES";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            productForm.reset();
+            document.getElementById('productId').value = '';
+            document.getElementById('formTitle').innerText = "Add New Product";
+            document.getElementById('submitBtn').innerText = "SAVE PRODUCT";
+        }
+
+        function showToast(msg, icon = "✅") {
+            const t = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            document.getElementById('toastIcon').innerText = icon;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>
