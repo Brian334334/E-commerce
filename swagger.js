@@ -10,7 +10,7 @@ const options = {
       description: "API documentation for my E-commerce project"
     },
   },
-  apis: ["./routes/*.js"]  // <-- <-- include routes here
+  apis: ["./routes/*.js"]  
 };
 
 const swaggerSpec = swaggerJSDoc(options);

@@ -8,7 +8,7 @@ import {
     updateProduct, 
     deleteProduct 
 } from '../controllers/productController.js';
-
+``
 const router = express.Router();
 
 // Multer config for images
